@@ -1,0 +1,3 @@
+[submodule "SWE"]
+	path = SWE
+	url = https://github.com/fomics/SWE.git
