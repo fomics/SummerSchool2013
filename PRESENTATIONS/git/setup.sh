@@ -1,6 +1,6 @@
-cat ./config >> ~/.gitconfig
+cat ./configt >> ~/.gitconfig
 mkdir ~/.bash
 cp git-* mkdir ~/.bash
-cat bashconfig >> ~/.bashrc
+cat ./config-bash >> ~/.bashrc
 
 
