@@ -14,11 +14,9 @@
         unadd = reset HEAD --
         l5 = log -5
         l1 = log --pretty=oneline
-        lp = lop -p
-        who = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
-        what = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+        ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+        lp = log -p
             
-        k = !gitk
         kl = !gitk --argscmd='git for-each-ref --format=\"%(refname)\" refs/heads refs/tags'
         ka = !gitk --all
 [push]
