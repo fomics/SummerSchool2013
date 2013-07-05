@@ -1,5 +1,7 @@
 \documentclass[t]{beamer}
-%\usetheme{amcg}
+% If you don't have access to the Imperial College beamer theme, then
+% commenting out the following line will produce a generic version of the
+% slides. 
 \usetheme{iclpt}
 
 \usepackage{color,listings}
@@ -276,7 +278,7 @@ bar.o: bar.c bar.h
   \item May build the project directly (e.g. SCons), or write Makefiles which
     build the project (e.g. automake/autoconf CMake).
   \item Typically honour conventional environment variables (e.g. CC,
-    CFLAGS, PETSC_DIR) and so ``play nice'' alongside system adminstration
+    CFLAGS, PETSC\_DIR) and so ``play nice'' alongside system adminstration
     tools like environment modules.
   \end{itemize}
   

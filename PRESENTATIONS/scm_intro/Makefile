@@ -17,4 +17,4 @@ $(TEX_TARGETS): vcs.py
 # ps files which should go in $(PSFILES)
 clean: 
 	rm -r $(TARGETS) $(PSFILES) *.dvi *.aux *.log *.bbl *.blg \
-*.out *.snm *.toc *.nav 2>/dev/null||true
+*.out *.snm *.toc *.nav *.vrb 2>/dev/null||true
