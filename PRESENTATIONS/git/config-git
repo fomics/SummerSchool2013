@@ -1,0 +1,32 @@
+[alias]
+        st = status
+        wc = whatchanged
+        dn = diff --name-only
+        df = diff
+        br = branch
+        ba = branch -a
+        rs = remote show
+        ci = commit  
+        cp = cherry-pick
+        co = checkout
+        ce = commit --allow-empty-message -m ''
+        mb = merge-base
+        unadd = reset HEAD --
+        l5 = log -5
+        l1 = log --pretty=oneline
+        lp = lop -p
+        who = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
+        what = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+            
+        k = !gitk
+        kl = !gitk --argscmd='git for-each-ref --format=\"%(refname)\" refs/heads refs/tags'
+        ka = !gitk --all
+[push]
+	default = current
+[merge]
+        tool = kdiff3
+[mergetool "kdiff3"]
+        cmd = /apps/todi/kdiff3/kdiff3 \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+[diff]
+        external = ~/.bash/git-diff3.sh
+

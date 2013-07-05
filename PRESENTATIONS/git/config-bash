@@ -1,0 +1,8 @@
+####################################################
+# git setup
+####################################################
+module load git
+#/apps/todi/git/20121128/gnu_472/bin/git
+source ~/.bash/git-prompt.sh
+source ~/.bash/git-completion.sh
+
