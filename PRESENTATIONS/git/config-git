@@ -9,7 +9,6 @@
         ci = commit  
         cp = cherry-pick
         co = checkout
-        ce = commit --allow-empty-message -m ''
         mb = merge-base
         unadd = reset HEAD --
         l5 = log -5
@@ -17,7 +16,7 @@
         ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
         lp = log -p
             
-        kl = !gitk --argscmd='git for-each-ref --format=\"%(refname)\" refs/heads refs/tags'
+        k = !gitk --argscmd='git for-each-ref --format=\"%(refname)\" refs/heads refs/tags'
         ka = !gitk --all
 [push]
 	default = current
