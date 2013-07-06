@@ -1,0 +1,64 @@
+\documentclass[t]{beamer}
+% If you don't have access to the Imperial College beamer theme, then
+% commenting out the following line will produce a generic version of the
+% slides. 
+\usetheme{iclpt}
+
+\usepackage{color,listings}
+\usepackage{pstricks, pst-node}
+\usepackage{pgfpages,xspace,array}
+
+\newcommand{\doc}[1]{\psshadowbox[framearc=0]{#1}}
+\newcommand{\program}[1]{\psframebox[framearc=.2]{#1}}
+
+\usepackage{graphicx,stmaryrd,cancel}
+\usepackage{bibentry}
+\usepackage{hyperref}
+\usepackage{amscd}
+\usepackage{booktabs}
+\bibliographystyle{elsarticle-harv}
+
+\lstset{frame=single}
+
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+
+\definecolor{icdarkblue}{RGB}{23,18,134}
+\definecolor{icdarkgreen}{RGB}{0,130,0}
+
+%\setbeameroption{show notes on second screen}
+
+\author[David A. Ham]{Dr David~A.~Ham} 
+\date{24 May 2013}
+
+\title{Verification and validation of simulation software}
+                  
+\institute[Imperial College London]{
+  Department of Computing, Imperial College London\\
+  Grantham Institute for Climate Change, Imperial College London
+david.ham@imperial.ac.uk}
+
+\begin{document}
+\nobibliography{bibliography}
+
+\begin{frame}{}
+  \vfill{}
+
+  \centering
+
+  \Large\color{icdarkblue}\inserttitle\\
+  %\normalsize\insertsubtitle\\[3ex]
+  \small\color{black}\insertauthor\\[3ex]
+  \footnotesize\insertinstitute
+
+  \vfill{}
+
+  With much material from \bibentry{Farrell2011}
+
+\end{frame}
+
+
+
+\end{document}
