@@ -1,7 +1,12 @@
-TEX_TARGETS = 
-TARGETS = output presentation.pdf $(TEX_TARGETS)
+TEX_TARGETS = output/verification.pdf
+TARGETS = output presentation.pdf $(TEX_TARGETS) 
 
 presentation.pdf: $(TEX_TARGETS)
+
+output/%.pdf: %.dia
+	install -d output
+	dia --filter=eps --export=$(basename $@).eps $<
+	convert $(basename $@).eps $@
 
 %.pdf: %.tex bibliography.bib
 	pdflatex --enable-write18 $<

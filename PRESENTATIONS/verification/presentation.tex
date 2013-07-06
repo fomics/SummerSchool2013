@@ -13,6 +13,7 @@
 
 \usepackage{graphicx,stmaryrd,cancel}
 \usepackage{bibentry}
+\usepackage{natbib}
 \usepackage{hyperref}
 \usepackage{amscd}
 \usepackage{booktabs}
@@ -59,6 +60,84 @@ david.ham@imperial.ac.uk}
 
 \end{frame}
 
+\begin{frame}{How do we know whether to believe the output of a model?}
+  \vfill{}
 
+  \pause
+  This is fundamentally a mixed question of mathematics, software
+  engineering, and application science. 
+  \vfill{}
+
+  \pause
+  It's also a critical question which all computational scientists have to
+  answer if they expect other scientists or society at large to take note of
+  their results.
+  \vfill{}
+  
+
+\end{frame}
+
+\begin{frame}{A brief trip back to philosophy of science 101}
+  
+  \begin{itemize}
+  \item Mathematical results are \emph{proven}. In other words, if the
+    assumptions of a theorem are satisfied, then the result \emph{always}\
+    follows. There is no possibility of another result.
+  \item Science proceeds by \emph{hypotheses}. These can never be proven in
+    the mathematical sense, but they can be \emph{falsified}\ through a
+    contrary observation\footnote{\bibentry{popper1959},\\\bibentry{howden1976}}.
+  \end{itemize}
+  
+  So what hypotheses does our software present?
+
+\end{frame}
+
+\begin{frame}{Verification and validation operations}
+
+  \includegraphics[width=\textwidth]{output/verification.pdf}
+  
+\end{frame}
+
+\begin{frame}{Verification and validation operations}
+  
+  \begin{itemize}
+  \item Only the discretisation of the PDE is usually a mathematical
+    operation which can be proven.
+  \item Verification of software by mathematical methods is practiced in
+    some fields of computing, but simulation code is typically far beyond
+    their scope.
+  \item The relationship between the continuous model and the physical
+    system cannot be directly measured, so we must go through \emph{all}\
+    the other steps. 
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{If it's not tested, it's broken.}
+  
+  \begin{description}
+  \item[Unit tests] Tests of correct behaviour applied to the smallest
+    possible unit of code.
+  \item[Analytic solutions] Very strong tests of correctness of numerics and
+    implementation, if you can get one!
+  \item[Method of manufactured solutions] A mechanism for generating
+    analytic solutions.
+  \item[Regression tests] Tests against a previously computed result. Only a
+    test of change, not of correctness.
+  \item[Third party solution] Tests against another model. Better than
+    regression tests, but only as good as the other model.
+  \item[Comparisons to "real" data] The only way to validate a model, but of
+    limited use in verification.
+  \end{description}
+
+\end{frame}
+
+\begin{frame}{Software tools for verification}
+  
+\end{frame}
+
+\begin{frame}{Coverage}
+  
+\end{frame}
 
 \end{document}
