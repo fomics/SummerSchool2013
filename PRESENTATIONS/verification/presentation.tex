@@ -18,6 +18,9 @@
 \usepackage{amscd}
 \usepackage{booktabs}
 \bibliographystyle{elsarticle-harv}
+\usepackage{amsmath}
+
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
 
 \lstset{frame=single}
 
@@ -126,11 +129,116 @@ david.ham@imperial.ac.uk}
     test of change, not of correctness.
   \item[Third party solution] Tests against another model. Better than
     regression tests, but only as good as the other model.
-  \item[Comparisons to "real" data] The only way to validate a model, but of
+  \item[Comparisons to ``real'' data] Essential in validating a model, but of
     limited use in verification.
   \end{description}
 
 \end{frame}
+
+\begin{frame}{Some PDE testing theory}
+
+  First, know what convergence means for your numerics. Numerical schemes
+  for PDEs usually have convergence behaviour given by an expression such
+  as:
+  \begin{equation}
+    E_h=O(h^n)
+  \end{equation}
+  Where $E_h$ is the error in the numerical solution, $h$ is a measure of the
+  mesh spacing and $n$ is the order of convergence of the method.
+  
+  It is important to understand both sides of this expression.
+
+  \hfill{}
+
+  Testing convergence behaviour of numerical schemes is a very sensitive
+  verification test, since almost any error in the numerics will degrade the
+  convergence order.\footnote{At least for schemes of greater than first order.}
+
+\end{frame}
+
+\begin{frame}{Definition of error}
+  
+  Finite volume and finite element schemes converge in (at least) the space
+  $L^2$. So the definition:
+  \begin{equation}
+    E_h = \left(\int_\Omega(\hat{S}-S)^2\mathrm{d}V\right)^{\frac{1}{2}}
+  \end{equation}
+  is often appropriate. Here $\Omega$ is the solution domain, $\hat{S}$ is
+  the numerical solution and $S$ is the exact solution.
+  \vfill{}
+  
+  Importantly, this is \emph{not}\ the same as pointwise evaluation of the
+  solution. 
+
+\end{frame}
+
+\begin{frame}{L2-norm for low-order finite volume}
+  
+  For low-order finite volume, the $L^2$-norm is approximated by summing over
+  control volumes:
+  \begin{equation}
+    E_h \approx \left(\sum_{v\in\Omega}\left(\mathrm{vol}(v)\left(\hat{S}_v - S(\vec{x}_v)\right)\right)^2\right)^{\frac{1}{2}}
+  \end{equation}
+  where $\vec{x}_v$ is the location of the control point. This creates an
+  $O(h^2)$ error in the integration of the analytic solution, so is only
+  acceptable for schemes of second order and below.
+  \vfill{}
+
+  \textbf{General rule:} remember to always ensure that the error you make
+  measuring the error is smaller than the error itself!
+
+\end{frame}
+
+\begin{frame}{Evaluating convergence rate}
+  Let's return to:
+  \begin{equation}
+    E=O(h^n)
+  \end{equation}
+  and which means:
+  \begin{equation}
+    \lim_{h\rightarrow 0} E_h\leq Ch^n
+  \end{equation}
+  For some $C$. \pause Further, if $n$ is the optimal convergence rate of the
+  scheme, then for \emph{sufficiently small} $h$:
+  \begin{equation}
+    E_h\approx Ch^n    
+  \end{equation}
+
+\end{frame}
+
+\begin{frame}{Evaluating convergence rate}
+
+  Suppose we run the simulation on two meshes with typical (small) mesh spacing
+  $h_1$ and $h_2$:
+  \begin{eqnarray} 
+    E_{h_1} & \approx & Ch_1^{n}\textrm{,} \\ E_{h_2} &
+    \approx & Ch_2^{n}\textrm{,} 
+\end{eqnarray}
+\pause
+\begin{equation}
+  \frac{E_{h_1}}{E_{h_2}} \approx \left(\frac{h_1}{h_2}\right)^n
+\end{equation}
+\pause
+\begin{equation}
+  n \approx \log_{h_1/h_2}\left(\frac{E_{h_1}}{E_{h_2}}\right)
+\end{equation}
+
+\end{frame}
+
+\begin{frame}{Method of manufactured solutions}
+
+  MMS is a ridiculously simple idea. 
+  
+\end{frame}
+
+\begin{frame}{Test driven development}
+  
+  Core commandments of the cult:
+  
+
+\end{frame}
+
+
 
 \begin{frame}{Software tools for verification}
   
