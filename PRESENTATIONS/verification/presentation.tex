@@ -172,7 +172,7 @@ david.ham@imperial.ac.uk}
 
 \end{frame}
 
-\begin{frame}{L2-norm for low-order finite volume}
+\begin{frame}{$L^2$-norm for low-order finite volume}
   
   For low-order finite volume, the $L^2$-norm is approximated by summing over
   control volumes:
@@ -227,25 +227,173 @@ david.ham@imperial.ac.uk}
 
 \begin{frame}{Method of manufactured solutions}
 
-  MMS is a ridiculously simple idea. 
+  MMS is a ridiculously simple idea: 
+  \begin{itemize}
+  \item choose the PDE
+  \item choose the function you want as the solution
+  \item calculate what the right hand side source term would have to be.
+  \end{itemize}
   
+\end{frame}
+
+\begin{frame}{Method of manufactured solutions}
+
+  Example: the advection-diffusion equations in 2D.
+
+  \begin{equation}
+    \frac{\partial T}{\partial t} + \mathbf{u}\cdot \nabla T -
+    \kappa\nabla^2 T = 0
+  \end{equation}
+  
+  \pause
+  We need a source term, $S$
+  \begin{equation}
+    \frac{\partial T}{\partial t} + \mathbf{u}\cdot \nabla T -
+    \kappa\nabla^2 T = S
+  \end{equation}
+  
+\end{frame}
+
+\begin{frame}{Method of manufactured solutions}
+  Next, we choose values for the paramters $\vec{u}$ and $\kappa$, and a
+  solution $T(x,y,t)$.\pause\ We choose (fairly arbitrarily):
+  \begin{gather}
+    \kappa=0.7\\
+    \vec{u} =
+    \begin{bmatrix}
+      \sin\left(5(x^2 + y^2)\right)\\
+      \cos\left(3(x^2 - y^2)\right)
+    \end{bmatrix}\\
+    T(x, y, t) = \sin\left(25xy\right)- 2y/x^{1/2}
+  \end{gather}
+  
+\end{frame}
+
+\begin{frame}{Method of manufactured solutions}
+  Now, it's ``just'' a matter of substituting into the equations. This is a
+  somewhat technical process which is most easily and reliably achieved
+  using a symbolic algebra package. We used Sage, other examples include
+  Maple and Matlab:
+  \begin{eqnarray*} S &=& \frac{\partial T}{\partial t} + \mathbf{u}\cdot
+    \nabla T - \kappa\nabla^2 T\textrm{,} \\ 
+    &=& \left(25y\cos(25xy) + y/x^{3/2}\right)\sin\left(5(y^2 +
+      x^2)\right)\\ 
+    &&+ \left(25x\cos(25xy) - 2/x^{1/2}\right)\cos\left(3(x^2 - y^2)\right)
+    \\ 
+    &&+ 0.7\left(625(x^2+y^2)\sin(25xy) + 3y/(2x^{5/2})\right)\textrm{.}
+  \end{eqnarray*}
+\end{frame}
+
+\begin{frame}{Method of manufactured solutions}
+  Limitations and issues:
+  \begin{itemize}
+  \item Be wary of introducing errors in the discretisation of the source
+    term.
+  \item Ditto for any initial or boundary conditions.
+  \item Unfortunate choices of solution may ``switch off'' terms.
+  \item Only works for convergent schemes!
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{Method of manufactured solutions}
+
+  \begin{center}
+    \includegraphics[width=\textwidth]{MMS}     
+  \end{center}
+
+{\tiny From left to right: source term for
+the method of manufactured solutions advection-diffusion test case, the numerical solution calculated using a piecewise-linear
+Galerkin discretisation, the absolute difference between the analytical and numerical solutions, the meshes used to compute the
+previous images with average mesh spacings, $h$, of $0.08$ (top) and $0.01$ (bottom).}
+
+\end{frame}
+
+\begin{frame}{Method of manufactured solution: does our software work?}
+  
+  \begin{center}
+    % \renewcommand{\tabcolsep}{1cm} \renewcommand{\arraystretch}{1.0}
+    \begin{tabular}{@{\hspace{0.05cm}}c@{\hspace{0.05cm}} | @{\hspace{0.05cm}}c@{\hspace{0.05cm}} @{\hspace{0.05cm}}c@{\hspace{0.05cm}}
+        @{\hspace{0.05cm}}c@{\hspace{0.05cm}} @{\hspace{0.05cm}}c@{\hspace{0.05cm}}
+        @{\hspace{0.05cm}}c@{\hspace{0.05cm}}} 
+      \hline
+      $h_1\rightarrow h_2$ \ & $0.08 \rightarrow 0.04$ \ & $0.04\rightarrow
+      0.02$ \ & $0.02\rightarrow 0.01$ \ & $0.01\rightarrow 0.005$\\ \hline 
+      $n$ (CV)   \ &   2.42   \  &   2.00    \ &  1.43 \ & 0.97 \\ \hline 
+      $n$ (P1) \ &    2.03    \  &   1.91    \ &  2.08 \ & 2.12 \\ \hline 
+    \end{tabular} 
+    \vspace{1ex}
+  \end{center}
+  
+  {\small The difference between the analytical and numerical solutions
+  using a first-order control volume (CV) discretisation and a second-order piecewise-linear Galerkin (P1) discretisation are
+  calculated in the $L^2$ norm.  The ratio between these on two spatial mesh resolutions, $h_1$ and $h_2$, are used to estimate the
+  order of spatial convergence of the model for this problem. The expected order of convergence, or better, is observed for both
+  spatial discretisations.}
+
+
 \end{frame}
 
 \begin{frame}{Test driven development}
   
   Core commandments of the cult:
+  \includegraphics[height=.8\textheight]{Test-driven_development.PNG} 
   
+  \tiny Image from \url{http://en.wikipedia.org/wiki/File:Test-driven_development.PNG}
+\end{frame}
+
+\begin{frame}{Reality check: a test heirarchy}
+
+  Fluidity at Imperial uses this heirarchy:
+
+  \begin{enumerate}
+  \item Unit tests - very fast
+  \item Short tests $<$ 20s each
+  \item Medium tests up to several minutes.
+  \item Long tests - usually parallel, may take hours.
+  \end{enumerate}
+  
+  \begin{itemize}
+  \item  Users are expected to run unit tests and short tests locally.
+  \item  Everything up to medium is run on every trunk commit and can be requested
+  for any branch commit.
+  \item Long tests run on trunk on a rolling basis.
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{Even more real check: where to start}
+  
+  \begin{enumerate}
+  \item create a test target in your build system (e.g. \texttt{make test})
+  \item add unit tests using your favourite unit test framework.
+  \item add verification tests using your favourite scripting language.
+  \item \texttt{make test}\ 
+  \end{enumerate}
 
 \end{frame}
 
-
-
-\begin{frame}{Software tools for verification}
+\begin{frame}{Buildbot: test automation}
   
+  \begin{center}
+    
+    \includegraphics[width=\textwidth]{buildbot-simple.pdf}
+
+  \end{center}
+
 \end{frame}
 
-\begin{frame}{Coverage}
+\begin{frame}{Coverage tools: gcov}
   
+  How do you know how good your tests are? If you're using gcc, then gcov can help!
+  
+  \begin{itemize}
+  \item gcov (after using the right compiler options) provides information
+    about how many times each file is called.
+  \item lcov provides a graphical representation of this.
+  \item However! Touching each line of code is necessary but not sufficient!
+  \end{itemize}
+
 \end{frame}
 
 \end{document}
