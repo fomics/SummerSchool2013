@@ -40,6 +40,7 @@
 \newcommand{\CDPA}[1][]{Copyright, Designs and Patents Act 1988 #1\xspace}
 \newcommand{\SD}[1][]{Software Directive #1\xspace}
 \newcommand{\Berne}[1][]{Berne Convention #1\xspace}
+\newcommand{\URG}[1][]{Urheberrechtsgesetz #1\xspace}
 
 \usepackage[T1]{fontenc}
 \usepackage[sc]{mathpazo}
@@ -60,6 +61,16 @@
 
 \maketitle
 
+\section{About these notes}
+
+These notes were originally compiled to teach copyright in software at
+Imperial College London. Consequently, the emphasis is on UK and EU
+law. Some notes have been added as appropriate to draw attention to the
+relevant provisions of Swiss law. However, due to the large amount of this field
+which is governed by international treaties, most of the results presented
+here will apply in many countries, although the provisions which support
+them may be different.
+
 \section{What is copyright?}
 
 Copyright is a set of \emph{legal property rights}\ which the author of a work, or
@@ -71,17 +82,19 @@ can also be used to control the use of works in other ways.
 
 \section{The legal basis of copyright}
 
-Copyright is a statutory right created in UK domestic law by legislation
-passed by parliament. The current copyright act in the UK is the Copyright
-Designs and Patents Act 1988. However copyright exists in a wider context of
-European and international law. This creates a system of copyright law which
-is much more internationally uniform than is the case for other domains of
-law such as contract, tort\footnote{Tort is the technical legal term for
-  private law matters such as negligence, trespass and the civil (but not
-  criminal) aspects of assault.} and criminal law. This means that most of
-what we will cover in these lectures will hold true in many other
+Copyright is a statutory right created in domestic law by legislation passed
+by parliament. The current copyright act in the UK is the Copyright Designs
+and Patents Act 1988, while that in Switzerland is the Urheberrechtsgesetz
+1992 (URG). However copyright exists in a wider context of European and
+international law. This creates a system of copyright law which is much more
+internationally uniform than is the case for other domains of law such as
+contract, tort\footnote{Tort is the technical legal term for private law
+  matters such as negligence, trespass and the civil (but not criminal)
+  aspects of assault.} and criminal law. This means that most of what we
+will cover in these lectures will hold true in many other
 jurisdictions. Attempts will be made to highlight important international
-differences, especially between the situation in the EU and that in the US.
+differences, especially between the situation in Switzerland, the EU and
+that in the US.
 
 Some of the more important international sources of copyright law which
 affect the protection of computer programmes are:
@@ -91,6 +104,10 @@ affect the protection of computer programmes are:
     establishes such basic principles as recognition of copyright in works
     authored overseas, and sets out an international minimum term of
     protection of the life of the author plus 50 years.
+  \item[Agreement on Trade Related Aspects of Intellectual Property Rights
+    (TRIPS)] This is a World Trade Organisation agreement which came into
+    effect in 1996. This mandates the protection of software under the Berne
+    convention. 
   \item[Directive on the Legal Protection of Computer Programs (the Software
     Directive)] Directive
     2009/24/EC  is the current piece of EU legislation
@@ -145,8 +162,8 @@ example of this is theft. Theft is a very particular criminal offence
 concerned with dishonestly making off with personal property. It is simply
 not possible to commit this crime with respect to a set of immaterial legal
 rights. Violating copyright can in some cases be a criminal offence, but it
-will be an offence under the Copyright Designs and Patents Act 1988 and
-unrelated to the offence of theft created by the Theft Act 1968. 
+will be an offence under copyright law and
+unrelated to the offence of theft. 
 
 \subsection{Other forms of intellectual property}
 
@@ -179,9 +196,11 @@ and video recordings are among the categories of work which attract the
 protection of copyright law. The rights associated with copyright vary
 somewhat according to the class of work so it's important to know to which
 one your output belongs. Computer programs are quite a lot newer than most copyright
-law, and so were slotted in later. Computer programs (in both source and
+law, and so were slotted in later. Under the Berne convention, computer programs (in both source and
 object form) are considered to be literary works for the purpose of
-copyright protection\footnote{\SD[art 1]; \CDPA[s 3]}. However as we shall
+copyright protection. This is followed in EU legislation\footnote{\SD[art 1]; \CDPA[s 3]}, but interesting
+the URG has a specific category for software separate from all other
+works\footnote{\URG{art 2.3}}. However as we shall
 see below, recent legislation, particularly the \SD, has created
 rights and limitations which are peculiar to computer programmes and do
 not, for example, apply to books.
@@ -205,7 +224,7 @@ any of these things.
 \end{enumerate}
 
 These rights are laid out in article 4.1 of the Software Directive, and in
-sections 16-21 of the \CDPA. 
+sections 16-21 of the \CDPA, and in artice 10 of the \URG. 
 
 In addition to these primary rights, there are a number of secondary
 restrictions imposed by copyright law concerned with matters such as dealing
@@ -213,7 +232,7 @@ in infringing copies. We will not consider these matters here.
 
 \subsection{Exceptions to copyright}
 
-Articles 5 and 6 of the Software Directive lay out several 
+Articles 5 and 6 of the Software Directive and simular national legislation lay out several 
 exceptions to the exclusive rights of the copyright holder. Some of these
 can be really important to the software developer.
 
@@ -226,7 +245,8 @@ can be really important to the software developer.
   modifying the program to correct errors.
 \item[The right to make a backup] Someone with the right to use a piece of
   software is also entitled to make a backup copy where that is necessary
-  for the use. This is quite a limited right.
+  for the use. This is quite a limited right in the EU, however in
+  Switzerland it seems to be a more general right \footnote{\URG[art 24.2]}
 \item[The right to observe, study and test] ``The person having a right to
   use a copy of a computer program shall be entitled, without the
   authorisation of the rightholder, to observe, study or test the
@@ -235,13 +255,13 @@ can be really important to the software developer.
   any of the acts of loading, displaying, running, transmitting or storing
   the program which he is entitled to do.''\footnote{\SD[art 5.3]} This
   right would appear to enable the use of debuggers and other monitoring
-  tools.
+  tools. This right does not seem to explicitly exist under the \URG.
 \item [The right to decompile] In limited circumstances, it is legal to copy
   and translate an otherwise legally held copy of a piece of software in
   order to achieve interoperability with an independently created piece of
   software. This right is restricted to those actions needed to achieve
   interoperability, and the relevant information must not be readily
-  available.
+  available. In Switzerland, this right exists under \URG[21]
 \end{description}
 
 The right to use is essentially a default term in every software licence
@@ -266,7 +286,8 @@ using the death date of the last surviving author. The effect of these terms
 in the fast-paced and young field of computer programming is that copyright
 is, for practical purposes, permanent. To provide some perspective, any
 surviving computer programmes written by Alan Turing will remain protected
-by copyright until 2024.
+by copyright until 2024 in the EU, and only came out of copyright in
+Switzerland in 2004.
 
 The current long terms of copyright are the result in no small part of
 extensive lobbying by large commercial copyright owners, typically from
@@ -298,6 +319,11 @@ Since students are not employees, copyright in anything a student writes
 belongs to the student personally. Some universities have copyright policies
 which claim ownership of their students' work. In the light of the above
 legislation, it is very unclear on what basis these policies purport to operate.
+
+In other countries, PhD students are often employees of their university. In
+this case their university probably owns copyright in their code. For
+example this is the situation in Switzerland \footnote{\URG[art
+  17]. Unusually, in Switzerland employer ownership of copyright is peculiar to software.} 
 
 \subsection{Copyright applies automatically}
 
@@ -335,7 +361,7 @@ questions about the scope of copyright law and what actions by a developer
 might infringe copyright. The extent of copyright coverage in software is a
 matter of interpreting the legislation, a task which falls to the courts. To
 determine exactly what is and what is not covered, we need therefore to look
-to the case law.
+to the case law. This case law is primarily British.
 
 \subsection{Literal copying}
 
