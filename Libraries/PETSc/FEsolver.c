@@ -66,8 +66,9 @@ int main(int argc,char **args)
 
   /* 
      Create stiffness matrix of size NxN
+     Careful! MatCreate expects a pointer to the object
   */
-  ierr = MatCreate(***,***);CHKERRQ(ierr);
+  ierr = MatCreate(PETSC_COMM_WORLD,***);CHKERRQ(ierr);
   ierr = MatSetSizes(A,PETSC_DECIDE,PETSC_DECIDE,***,***);CHKERRQ(ierr);
   ierr = MatSetFromOptions(A);CHKERRQ(ierr);
   ierr = MatSeqAIJSetPreallocation(A,9,PETSC_NULL);CHKERRQ(ierr);
@@ -89,8 +90,8 @@ int main(int argc,char **args)
      ierr = MatSetValues(A,4,idx,***,***,***,ADD_VALUES);CHKERRQ(ierr);
   }
   /* Perform the (final) assembly of A */
-  ierr = MatAssemblyBegin(***,***);CHKERRQ(ierr);
-  ierr = MatAssemblyEnd(***,***);CHKERRQ(ierr);
+  ierr = MatAssemblyBegin(***,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+  ierr = MatAssemblyEnd(***,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 
   /*
      Create right-hand-side and solution vectors

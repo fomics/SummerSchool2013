@@ -11,7 +11,11 @@ Rationale: This examples provides experience for common PETSc operations, as wel
 
 Code: Check out with
 
- svn checkout svn://scm.hpcforge.org/var/lib/gforge/chroot/scmrepos/svn/codes/trunk/PETSc/FEsolver
+  git clone https://github.com/fomics/SummerSchool2013.git
+
+Navigate to the appropriate directory:
+
+  cd SummerSchool2013/Libraries/PETSc
 
 This provides an incomplete version of the main code: [FEsolver.c]
 This sections of code labeled with '***' need to be added.
@@ -28,10 +32,10 @@ over the unit square with square finite elements of size h x h.
 
 Assignment:
 
-Switch the programming environment, e.g.,
+Switch the programming environment and PETSc, e.g.,
 
  module swap PrgEnv-cray PrgEnv-gnu
- module load petsc
+ module load cray-petsc
 
 Take a look at the main program FEsolver.F90. The bulk of the code
 defines the stiffness matrix and the corresponding right hand side. We
@@ -60,8 +64,8 @@ Finally, the matrix is assembled (potentially with communication to
 shuffle the entries to the process that owns them); specify this
 assembly as final:
 
- ierr = MatAssemblyBegin(***,***);CHKERRQ(ierr);
- ierr = MatAssemblyEnd(***,***);CHKERRQ(ierr);
+ ierr = MatAssemblyBegin(***,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+ ierr = MatAssemblyEnd(***,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 
 Similarly the right hand side is set to zero at all vertices except
 those on the boundary, for which it is set through the Dirichlet
@@ -83,7 +87,7 @@ entries to their respective processes):
 
 Create a KSP operator which is bound to the matrix A. This setup operation is timed
 
- ierr = KSPCreate(***,***);CHKERRQ(ierr);  /* Create ksp operator, as in lecture */
+ ierr = KSPCreate(PETSC_COMM_WORLD,***);CHKERRQ(ierr);  /* Create ksp operator, as in lecture */
  /* Bind the matrix A to the operator */
  ierr = KSPSetOperators(***,***,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
  ierr = KSPSetInitialGuessNonzero(ksp,PETSC_TRUE);CHKERRQ(ierr);
@@ -121,7 +125,7 @@ course assistants for help. Compile.
 Run the code on one node of Palu. First start an interactive session
 on a compute node,
 
- salloc --res=sschool --part=daynogpu -N 1
+ salloc --res=sschool -N 1
 
 Then run the code with various numbers of processes (NPROCS=1-24) for
 a 100 x 100 mesh:
