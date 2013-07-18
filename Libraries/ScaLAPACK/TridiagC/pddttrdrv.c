@@ -111,7 +111,7 @@ DESCRIPTION
 
     */
 
-   Cblacs_get( ***, ***, *** );
+   Cblacs_get( 0, 0, *** );  /* Get the context (communicator) */
 
    /* ***   INITIALIZE THE VIRTUAL TOPOLOGY AS A 1D ARRAY OF SIZE 1 X NPE
 
@@ -152,7 +152,8 @@ DESCRIPTION
 
     */
 
-   Cblacs_gridinit( ***, ***, ***, *** );
+   /* 1 x npe process grid with Row major ordering */
+   Cblacs_gridinit( &context, ***, ***, *** ); 
 
    if      ( mype == 0 ){ 
            /* PE = 0 gets D(1:4), DL(1:4), DU(1:4) and B(1:4) */
@@ -206,7 +207,7 @@ DESCRIPTION
 
    */
 
-   pddttrf_( ***, ***, ***, ***, ***, ***, ***, ***, ***, ***, *** );
+   pddttrf_( &n, dl, ***, ***, &ja, desca, ***, &laf, work, &lwork, &info );
 
    /* Solution */
 
@@ -232,7 +233,8 @@ DESCRIPTION
 
    */
 
-   pddttrs_( ***, ***, ***, ***, ***, ***, ***, ***, ***, ***, ***, ***, ***, ***, ***, *** );
+   pddttrs_( &trans, ***, &nrhs, ***, ***, ***, ***, desca, ***, &ib, ***, 
+            af, &laf, work, &lwork, &info );
 
    printf( "MYPE=%i: x[:] = %7.4f %7.4f %7.4f %7.4f\n",
            mype, b[0], b[1], b[2], b[3]);

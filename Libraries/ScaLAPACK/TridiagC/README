@@ -1,3 +1,30 @@
+Case Study 1: Use ScaLAPACK routines PDDTTRF and PDDTTRS to factor and
+solve a (diagonally dominant) tridiagonal system of linear equations
+Tx = b
+
+Exercise - Solve a small tridiagonal system on 2 MPI processes
+
+Author: ScaLAPACK community, adaptation by Sawyer
+
+Goal: learn the add basic BLACS and ScaLAPACK calls
+
+Rationale: This example should offer experience in initializing and then using ScaLAPACK.
+
+Code: Check out with
+
+  git clone https://github.com/fomics/SummerSchool2013.git
+
+Navigate to the appropriate directory:
+
+  cd SummerSchool2013/Libraries/ScaLAPACK/TridiagC
+
+This directory includes an incomplete version of the main code:
+[pddttrdrv.c] This code will not compile. This sections of code
+labeled with '***' need to be added.
+
+QuickStart Instructions (for the impatient)
+
+
 	1) Load GNU programming environment
 		module swap PrgEnv-cray PrgEnv-gnu
 
@@ -5,10 +32,101 @@
 		vi pddttrdrv.c
 
 	4) Compile
-		gmake
+		make
 
 	5) Allocate one node on Todi
-		salloc --res=sschool --part=daynogpu -N 1
+		salloc --res=sschool -N 1
 
 	6) Run on 2 processes
 		aprun -n 2 ./pddttrdrv.exe
+
+
+More instructions for non-wizards:
+
+The code essentially performs an LU decomposition of a very small
+tridiagonal matrix:
+
+     [ 1.8180 0.6946                                           ]
+     [ 0.8385 1.6602 0.4449                                    ]
+     [        0.5681 1.3420 0.5466                             ]
+ T=  [               0.3704 1.2897 0.7027                      ]
+     [                      0.7027 1.3412 0.3704               ]
+     [                             0.5466 1.5341 0.5681        ]
+     [                                    0.4449 1.7271 0.8385 ]
+     [                                           0.6946 1.3093 ]
+
+and then uses forwards/backwards substition to solve a linear system Ax = b, 
+where the right-hand side is, 
+
+ b=  [ 1 2 3 4 5 6 7 8 ]^T
+
+
+The matrix and right-hand side are distributed over two processes
+(hardwired in code).
+
+Compilation: The directory you checked out contains a Makefile. It should not require revision.
+
+Load GNU programming environment
+		module swap PrgEnv-cray PrgEnv-gnu
+
+If you try to clean the directory then make the executable,
+
+ make clean; make
+
+You find that the code does not compile.  Take a look at the main
+program pddttrdrv.c: it contains '***' at several locations which have
+to be added.  There are five procedure calls which need to be revised:
+
+
+ /*   ***  RETRIEVE THE DEFAULT SYSTEM CONTEXT FROM BLACS */
+ Cblacs_get
+
+ /* ***   INITIALIZE THE VIRTUAL TOPOLOGY AS A 1D ARRAY OF SIZE 1 X NPE */
+ Cblacs_gridinit
+
+ /* *** FACTORIZE THE MATRIX  */
+ pddttrs_
+
+ /* *** SOLVE THE SYSTEM USING THE ABOVE FACTORIZATION */
+ pddttrs_
+
+ /*    *** EXIT THE GRID */
+ Cblacs_gridexit
+
+
+Execution: the easiest method is to allocate an interactive compute node with:
+
+  salloc --res=sschool -N 1
+
+The code is hardwired to run with 2 MPI processes. It is run with,
+
+ aprun -n 2 ./pddttrdrv.exe
+
+Notes::
+
+Switch the programming environment, e.g., for GNU,
+
+ module swap PrgEnv-cray PrgEnv-gnu  
+
+This loads the compiler and in addition loads Cray's scilib library
+which includes ScaLAPACK. Note that on most other systems, ScaLAPACK
+will not be automagically loaded, and it would be necessary to add
+include and library paths.
+
+
+The interface descriptions of all four routines have been added in the
+code comments. Essentially it is only a matter of carefully filling in
+the argument lists.  Since the actual variable names are identical to
+the function argument names, the only challenge is to decide whether 
+addresses or values need to be passed to the functions.
+
+BONUS: if you find this exercise too simple, alter the code to work with 3 MPI processes instead of 2. This will require:
+
+    -- Creating a 1x3 virtual topology
+    -- Distributing the vectors DL, D and DU over 3 domains, 
+       changing the descriptor accordingly
+    -- Distributing the right-hand side over 3 domains 
+
+Solution:
+
+A complete solution can be found here: [pddttrdrv_complete.c] 
