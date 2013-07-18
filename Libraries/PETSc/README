@@ -1,3 +1,184 @@
-This directory is meant for tutorial examples which use the PETSc library.  Current contents:
+Exercise - Solve a simple finite element problem, perform profiling
+and analysis
 
-	FEsolver: simple finite element solver on a simple domain.
+Author: PETSc team, adaptation by Sawyer
+
+Goal: Learn how to populate a finite element stiffness matrix and
+solve the resulting system with a Krylov subspace solver. Profile the
+code using PETSc tools to better understand the resulting performance.
+
+Rationale: This examples provides experience for common PETSc operations, as well as the profiling and time facilities.
+
+Code: Check out with
+
+ svn checkout svn://scm.hpcforge.org/var/lib/gforge/chroot/scmrepos/svn/codes/trunk/PETSc/FEsolver
+
+This provides an incomplete version of the main code: [FEsolver.c]
+This sections of code labeled with '***' need to be added.
+
+Compilation: The directory you checked out contains a Makefile. It should not require revision.
+
+ make clean; make
+
+Notes::
+
+This example conceptually solves a electrical potential problem (a
+parabolic differential equation with Dirichlet boundary conditions)
+over the unit square with square finite elements of size h x h.
+
+Assignment:
+
+Switch the programming environment, e.g.,
+
+ module swap PrgEnv-cray PrgEnv-gnu
+ module load petsc
+
+Take a look at the main program FEsolver.F90. The bulk of the code
+defines the stiffness matrix and the corresponding right hand side. We
+refer to this as the "setup" phase. For example, the local stiffness
+matrix is the same for all elements:
+
+ ierr = FormElementStiffness(h*h,Ke);
+
+These values are queued for insertion into the matrix by labeling the
+indices of the vertices, and setting the values through
+"MatSetValues".
+
+ for (i=start; i<end; i++) {
+    /* location of lower left corner of element */
+    x = h*(i % m); y = h*(i/m);
+    /* node numbers for the four corners of element */
+    idx[0] = (m+1)*(i/m) + (i % m);
+    idx[1] = idx[0]+1; idx[2] = idx[1] + m + 1; idx[3] = idx[2] - 1;
+    /* IDX is a 4-vector which simultaneously contains the row and
+       column indices of the vertices */
+    ierr = MatSetValues(A,4,idx,***,***,***,ADD_VALUES);CHKERRQ(ierr);
+ }
+
+
+Finally, the matrix is assembled (potentially with communication to
+shuffle the entries to the process that owns them); specify this
+assembly as final:
+
+ ierr = MatAssemblyBegin(***,***);CHKERRQ(ierr);
+ ierr = MatAssemblyEnd(***,***);CHKERRQ(ierr);
+
+Similarly the right hand side is set to zero at all vertices except
+those on the boundary, for which it is set through the Dirichlet
+condition $f(x,y)=y$.
+
+  for (i=0; i<4*m; i++) {
+    x = h*(rows[i] % (m+1)); y = h*(rows[i]/(m+1));  
+    val = y; /* value at boundary is linear interpolation in y direction*/
+    ierr = VecSetValues(u,1,&rows[i],&val,INSERT_VALUES);CHKERRQ(ierr);
+    /* insert one value (val) at the given row index */
+    ierr = VecSetValues(b,***,***,***,INSERT_VALUES);CHKERRQ(ierr);
+ }
+
+The vector is then assembled (possibly with communication to shuffle
+entries to their respective processes):
+
+ ierr = VecAssemblyBegin(b);CHKERRQ(ierr);
+ ierr = VecAssemblyEnd(b);CHKERRQ(ierr);
+
+Create a KSP operator which is bound to the matrix A. This setup operation is timed
+
+ ierr = KSPCreate(***,***);CHKERRQ(ierr);  /* Create ksp operator, as in lecture */
+ /* Bind the matrix A to the operator */
+ ierr = KSPSetOperators(***,***,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ ierr = KSPSetInitialGuessNonzero(ksp,PETSC_TRUE);CHKERRQ(ierr);
+ ierr = KSPSetFromOptions(ksp);CHKERRQ(ierr);
+ PetscGetTime(&tsetup2);
+ tsetup = tsetup2 - tsetup1;
+
+The actual solution of Au=b is determined through the wrapper to the
+Krylov subspace methods, which requires the operator (matrix), the
+right-hand side and an initial guess. This solve phase is timed.
+
+ PetscGetTime(&tsolve1);
+ ierr = KSPSolve(ksp,***,***);CHKERRQ(ierr);  /* Solve: A u = b */
+ PetscGetTime(&tsolve2);
+ tsolve = tsolve2 - tsolve1;
+
+This problem has an analytic solution, namely $f(x,y)=y$. Thus the
+residual is calculated by subtracting the analytic solution (ustar)
+from the computed solution (giving the residual vector) and taking its
+norm:
+
+ for (i=start; i<end; i++) {
+    x = h*(i % (m+1)); y = h*(i/(m+1));
+    val = y;
+    ierr = VecSetValues(ustar,1,&i,&val,INSERT_VALUES);CHKERRQ(ierr);
+ }
+ ierr = VecAssemblyBegin(ustar);CHKERRQ(ierr);
+ ierr = VecAssemblyEnd(ustar);CHKERRQ(ierr);
+ ierr = VecAXPY(u,***,***);CHKERRQ(ierr);  /* Subtract ustar from u */
+ ierr = VecNorm(***,***,&norm);CHKERRQ(ierr); /* Find the norm of u */
+
+Fill in the missing code identified by ***; feel free to ask the
+course assistants for help. Compile.
+
+Run the code on one node of Palu. First start an interactive session
+on a compute node,
+
+ salloc --res=sschool --part=daynogpu -N 1
+
+Then run the code with various numbers of processes (NPROCS=1-24) for
+a 100 x 100 mesh:
+
+ aprun -n NPROCS ./FEsolver.exe -m 100
+
+Make a simple graph of the setup and solve times. Which of the two
+phases scales better?
+
+Now run the code on a fixed number of cores (processes), e.g., 6, for
+various problem sizes, e.g., 50, 150, 200. How do the setup and solve
+phases scale with the problem size. Can you explain the scaling?
+
+Use the PETSc logging utilities to profile the code. This only
+requires an additional run-time argument to generate a summary file,
+e.g.,
+
+ aprun -n 6 ./FEsolver.exe -m 100 -log_summary logfile_100_6pes
+
+The resulting "logfile_100_6pes" contains extensive information about
+all the PETSc routines called by the application.
+
+Phase summary info:
+  Count: number of times phase was executed
+  Time and Flops: Max - maximum over all processors
+                  Ratio - ratio of maximum to minimum over all processors
+  Mess: number of messages sent
+  Avg. len: average message length
+  Reduct: number of global reductions
+  Global: entire computation
+  Stage: stages of a computation. Set stages with PetscLogStagePush() and PetscLogStagePop().
+     %T - percent time in this phase         %F - percent flops in this phase
+     %M - percent messages in this phase     %L - percent message lengths in this phase
+     %R - percent reductions in this phase
+  Total Mflop/s: 10e-6 * (sum of flops over all processors)/(max time over all processors)
+
+Rerun the application with logging for constant problem size (e.g., 100) on 1, 6, 12 and 24 processes.
+
+Reality check: do the "KSPSolve" times in the log correspond to
+*original* timings (without logging) provided by the timers. That is:
+does the logging add significant overhead?
+
+Interestingly, the logs do not explain where the main portion of the
+time is spent in the setup, which is by far the largest segment of the
+calculation for low numbers of processes. Add user events to find out
+where the bulk of time is being spent in the setup.
+
+ PetscLogEvent  USER_EVENT;
+ :
+ PetscLogEventRegister("Setup Section",PETSC_VIEWER_COOKIE,&USER_EVENT);
+ :
+ PetscLogEventBegin(USER_EVENT,0,0,0,0);
+ /*  Code segment to be profiled */
+ PetscLogEventEnd(USER_EVENT,0,0,0,0);
+
+Once again, can you make a guess at the reason for the reason scaling?
+
+Solution:
+
+A complete solution can be found here: [FEsolver_complete.F90]

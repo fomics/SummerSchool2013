@@ -1,0 +1,14 @@
+	1) Load GNU programming environment
+		module swap PrgEnv-cray PrgEnv-gnu
+
+	2) Edit source:  complete sections labeled with '***'
+		vi pddttrdrv.c
+
+	4) Compile
+		gmake
+
+	5) Allocate one node on Todi
+		salloc --res=sschool --part=daynogpu -N 1
+
+	6) Run on 2 processes
+		aprun -n 2 ./pddttrdrv.exe
