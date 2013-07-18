@@ -1,0 +1,7 @@
+This directory contains material related to the Libraries component (final day).
+
+It should contain code for two examples:
+
+	ScaLAPACK: factor and solve a (diagonally dominant) tridiagonal system of linear equations Tx = b
+	PETSc: solve a simple FE problem on a simple geometry
+
