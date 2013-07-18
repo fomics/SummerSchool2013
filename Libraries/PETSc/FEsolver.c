@@ -156,7 +156,7 @@ int main(int argc,char **args)
                 Create the linear solver and set various options
      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-  ierr = KSPCreate(***,***);CHKERRQ(ierr);  /* Create ksp operator, as in lecture */
+  ierr = KSPCreate(PETSC_COMM_WORLD,***);CHKERRQ(ierr);  /* Create ksp operator, as in lecture */
   /* Bind the matrix A to the operator, use A to derive preconditioner */
   ierr = KSPSetOperators(***,***,***,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
   ierr = KSPSetInitialGuessNonzero(ksp,PETSC_TRUE);CHKERRQ(ierr);
