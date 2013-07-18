@@ -9,9 +9,6 @@ all:	FEsolver.exe
 FEsolver.exe: FEsolver.o 
 	cc -O3 -o FEsolver.exe FEsolver.o
 
-FEsolver_ex.exe: FEsolver_ex.o 
-	cc -O3 -o FEsolver_ex.exe FEsolver_ex.o
-
 FEsolver_complete.exe: FEsolver_complete.o
 	cc -O3 -o FEsolver_complete.exe FEsolver_complete.o
 
